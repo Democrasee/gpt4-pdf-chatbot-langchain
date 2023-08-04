@@ -4,14 +4,13 @@ import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { makeChain } from '@/utils/makechain';
 import { pinecone } from '@/utils/pinecone-client';
 import { PINECONE_INDEX_NAME, PINECONE_NAME_SPACE } from '@/config/pinecone';
+import { makePostgresSqlChain } from '@/chains/sql';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { question, history } = req.body;
-
-  console.log('question', question);
+  const { question, history, bill_id } = req.body;
 
   //only accept post requests
   if (req.method !== 'POST') {
@@ -40,6 +39,8 @@ export default async function handler(
 
     //create chain
     const chain = makeChain(vectorStore);
+    // const postgresChain = await makePostgresSqlChain();
+
     //Ask a question using chat history
     const response = await chain.call({
       question: sanitizedQuestion,

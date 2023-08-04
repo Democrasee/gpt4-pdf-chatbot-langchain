@@ -80,6 +80,7 @@ export default function Home() {
         }),
       });
       const data = await response.json();
+
       console.log('data', data);
 
       if (data.error) {
@@ -98,7 +99,6 @@ export default function Home() {
           history: [...state.history, [question, data.text]],
         }));
       }
-      console.log('messageState', messageState);
 
       setLoading(false);
 
@@ -107,7 +107,7 @@ export default function Home() {
     } catch (error) {
       setLoading(false);
       setError('An error occurred while fetching the data. Please try again.');
-      console.log('error', error);
+      // console.log('error', error);
     }
   }
 

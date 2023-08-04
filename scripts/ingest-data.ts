@@ -2,24 +2,21 @@ import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { pinecone } from '@/utils/pinecone-client';
-import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
 import { PINECONE_INDEX_NAME, PINECONE_NAME_SPACE } from '@/config/pinecone';
-import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
-
-/* Name of directory to retrieve your files from 
-   Make sure to add your PDF files inside the 'docs' folder
-*/
-const filePath = 'docs';
+import { S3RecursiveLoader } from '@/loaders/S3';
 
 export const run = async () => {
   try {
     /*load raw docs from the all files in the directory */
-    const directoryLoader = new DirectoryLoader(filePath, {
-      '.pdf': (path) => new PDFLoader(path),
-    });
+    const documents = new S3RecursiveLoader('raw/congress/data/118/bills/hr', (object) => {
+      if (object.Key) {
+        return object.Key.includes('document.txt')
+      }
+      return false;
+    }, 1000)
 
     // const loader = new PDFLoader(filePath);
-    const rawDocs = await directoryLoader.load();
+    const rawDocs = await documents.load();
 
     /* Split text into chunks */
     const textSplitter = new RecursiveCharacterTextSplitter({
@@ -28,7 +25,7 @@ export const run = async () => {
     });
 
     const docs = await textSplitter.splitDocuments(rawDocs);
-    console.log('split docs', docs);
+    // console.log('split docs', docs);
 
     console.log('creating vector store...');
     /*create and store the embeddings in the vectorStore*/

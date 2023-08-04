@@ -15,19 +15,24 @@
     "ingest": "tsx -r dotenv/config scripts/ingest-data.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.382.0",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@pinecone-database/pinecone": "0.0.14",
     "@radix-ui/react-accordion": "^1.1.1",
     "clsx": "^1.2.1",
     "dotenv": "^16.0.3",
-    "langchain": "0.0.82",
+    "langchain": "0.0.122",
     "lucide-react": "^0.125.0",
     "next": "13.2.3",
     "pdf-parse": "1.1.1",
+    "peggy": "^3.0.2",
+    "pg": "^8.11.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.5",
-    "tailwind-merge": "^1.10.0"
+    "sqlite3": "^5.1.6",
+    "tailwind-merge": "^1.10.0",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@types/node": "^18.14.6",
