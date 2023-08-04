@@ -25,8 +25,6 @@ If the question is not related to the context, politely respond that you are tun
 
 {context}
 
-{format_instructions}
-
 Question: {question}
 Helpful answer in markdown:`;
 
@@ -78,7 +76,7 @@ const formatInstructions = parser.getFormatInstructions();
 const prompt = new PromptTemplate({
   template: QA_PROMPT,
   inputVariables: ['question', 'chat_history', 'context'],
-  partialVariables: { format_instructions: formatInstructions },
+  partialVariables: {  },
 });
 
 export const makeChain = (vectorstore: PineconeStore) => {
