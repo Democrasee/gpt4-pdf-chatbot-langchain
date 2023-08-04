@@ -47,6 +47,10 @@ PINECONE_ENVIRONMENT=
 
 PINECONE_INDEX_NAME=
 
+AWS_SECRET_ACCESS_KEY=
+AWS_ACCESS_KEY_ID=
+# Copy the digitalocean postgres ssl cert into `.postgres/ssl.crt`
+DATABASE_URL={database_url}&sslrootcert=./.postgres/ssl.crt
 ```
 
 - Visit [openai](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key) to retrieve API keys and insert into your `.env` file.
