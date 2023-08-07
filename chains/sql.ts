@@ -19,12 +19,12 @@ Only use the following tables:
 
 {table_info}
 
-In the CandidateSummary table, the column ttl_receipts represents the total amount of money a candidate raised.
-When querying CandidateSummary table, first query the Candidate table then query the CandidateSummary table with the candidate's id.
-
 Question: {input}`;
 
-const prompt = PromptTemplate.fromTemplate(template);
+const prompt = new PromptTemplate({
+    inputVariables: ['table_info', 'input', 'dialect'],
+    template
+});
 
 export const makePostgresSqlChain = async () => {
   const model = new OpenAI({

@@ -107,7 +107,7 @@ export class S3RecursiveLoader extends BaseDocumentLoader {
             new Document({
               pageContent: text,
               metadata: {
-                source: object.Key,
+                source: text_version_data.urls.unknown,
                 congress: bill_data.congress,
                 bill_version: text_version_data.version_code,
                 bill_version_id: text_version_data.bill_version_id,

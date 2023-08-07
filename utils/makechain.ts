@@ -18,8 +18,7 @@ Chat History:
 Follow Up Input: {question}
 Standalone question:`;
 
-const QA_PROMPT = `You are a helpful AI assistant that helps citizens learn about legislative bills. Use the following pieces of context to answer the question at the end.
-The question will contain the id of the bill. If it does not, DO NOT answer the question.
+const QA_PROMPT = `You are a helpful AI assistant that helps citizens learn about congress and legislative bills. Use the following pieces of context to answer the question at the end.
 If you don't know the answer, just say you don't know. DO NOT try to make up an answer.
 If the question is not related to the context, politely respond that you are tuned to only answer questions that are related to the context.
 
@@ -66,7 +65,7 @@ const attributeInfo: AttributeInfo[] = [
 
 const answerParser = StructuredOutputParser.fromNamesAndDescriptions({
   answer: "answer to the user's question",
-  source: "source used to answer the user's question, should be a file path.",
+  bill_id: "the id of the bill that the user is asking a question about"
 });
 
 const parser = new CombiningOutputParser(answerParser);
@@ -76,12 +75,12 @@ const formatInstructions = parser.getFormatInstructions();
 const prompt = new PromptTemplate({
   template: QA_PROMPT,
   inputVariables: ['question', 'chat_history', 'context'],
-  partialVariables: {  },
+  // partialVariables: { format_instructions: formatInstructions },
 });
 
 export const makeChain = (vectorstore: PineconeStore) => {
   const model = new OpenAI({
-    temperature: 0, // increase temepreature to get more creative answers
+    temperature: 0.5, // increase temepreature to get more creative answers
     modelName: 'gpt-3.5-turbo', //change this to gpt-4 if you have access
   });
 

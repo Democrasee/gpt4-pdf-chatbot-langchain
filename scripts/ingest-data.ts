@@ -5,18 +5,24 @@ import { pinecone } from '@/utils/pinecone-client';
 import { PINECONE_INDEX_NAME, PINECONE_NAME_SPACE } from '@/config/pinecone';
 import { S3RecursiveLoader } from '@/loaders/S3';
 
-export const run = async () => {
+export const run = async (path: string) => {
   try {
     /*load raw docs from the all files in the directory */
-    const documents = new S3RecursiveLoader('raw/congress/data/118/bills/hr', (object) => {
-      if (object.Key) {
-        return object.Key.includes('document.txt')
-      }
-      return false;
-    }, 1000)
+    const documents = new S3RecursiveLoader(
+      path,
+      (object) => {
+        if (object.Key) {
+          return object.Key.includes('document.txt');
+        }
+        return false;
+      },
+      20000,
+    );
 
     // const loader = new PDFLoader(filePath);
     const rawDocs = await documents.load();
+
+    console.log(`Found ${rawDocs.length} documents.`);
 
     /* Split text into chunks */
     const textSplitter = new RecursiveCharacterTextSplitter({
@@ -45,6 +51,17 @@ export const run = async () => {
 };
 
 (async () => {
-  await run();
-  console.log('ingestion complete');
+  for (const path of [
+    'raw/congress/data/118/bills/hconres',
+    'raw/congress/data/118/bills/hjres',
+    'raw/congress/data/118/bills/hr',
+    'raw/congress/data/118/bills/hres',
+    'raw/congress/data/118/bills/s',
+    'raw/congress/data/118/bills/sconres',
+    'raw/congress/data/118/bills/sjres',
+    'raw/congress/data/118/bills/sres',
+  ]) {
+    await run(path);
+    console.log('ingestion complete');
+  }
 })();

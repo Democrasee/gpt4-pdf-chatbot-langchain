@@ -39,7 +39,7 @@ export default async function handler(
 
     //create chain
     const chain = makeChain(vectorStore);
-    // const postgresChain = await makePostgresSqlChain();
+    const postgresChain = await makePostgresSqlChain();
 
     //Ask a question using chat history
     const response = await chain.call({
@@ -47,7 +47,16 @@ export default async function handler(
       chat_history: history || [],
     });
 
-    console.log('response', response);
+    try {
+      const postgresResponse = await postgresChain.call({
+        query: `How many bills were introduced in 2022?`
+      })
+      console.log('postgresResponse', postgresResponse);
+    } catch (error) {
+      console.log((error as any).message);
+    }
+    
+    // console.log('response', response);
     res.status(200).json(response);
   } catch (error: any) {
     console.log('error', error);
