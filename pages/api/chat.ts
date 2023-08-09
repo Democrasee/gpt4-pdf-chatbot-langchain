@@ -5,6 +5,7 @@ import { makeChain } from '@/utils/makechain';
 import { pinecone } from '@/utils/pinecone-client';
 import { PINECONE_INDEX_NAME, PINECONE_NAME_SPACE } from '@/config/pinecone';
 import { makePostgresSqlChain } from '@/chains/sql';
+import { Document } from 'langchain/document';
 
 export default async function handler(
   req: NextApiRequest,
@@ -48,12 +49,20 @@ export default async function handler(
     });
 
     try {
+      const sourceDocs = response.sourceDocuments as Document[];
+
+      const bill_ids = new Set(sourceDocs.filter((doc) => {
+        return doc.metadata.bill_id
+      }).map((doc) => doc.metadata.bill_id));
+
+
       const postgresResponse = await postgresChain.call({
-        query: `How many bills were introduced in 2022?`
-      })
+        query: `Find bills with the following id's: ${[...bill_ids].join(',')}`
+      });
+      
       console.log('postgresResponse', postgresResponse);
     } catch (error) {
-      console.log((error as any).message);
+      // console.log((error as any).message);
     }
     
     // console.log('response', response);

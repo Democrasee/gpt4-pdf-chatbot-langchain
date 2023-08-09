@@ -11,7 +11,7 @@ Table names are case sesitive so always put quotes around the table names.
 Use the following format:
 
 Question: "Question here"
-SQLQuery: "SQL Query to run"
+SQLQuery: 'SQL Query to run'
 SQLResult: "Result of the SQLQuery"
 Answer: "Final answer here"
 
@@ -41,14 +41,6 @@ export const makePostgresSqlChain = async () => {
     appDataSource: dataSource,
     includesTables: [
       'Bill',
-      'CongressMember',
-      'CongressMemberTerm',
-      'Vote',
-      'Candidate',
-      'CandidateSummary',
-      'CongressMemberVoteAnswer',
-      'GoogleElection',
-      'CoSponsorsForBills'
     ],
   });
 
@@ -57,6 +49,7 @@ export const makePostgresSqlChain = async () => {
     database,
     prompt,
     sqlOutputKey: 'sql',
+    verbose: true
   });
 
   return chain;
