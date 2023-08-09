@@ -49,8 +49,10 @@ export const makePostgresSqlChain = async () => {
     database,
     prompt,
     sqlOutputKey: 'sql',
-    verbose: true
+    verbose: true,
   });
 
+  chain.returnDirect = true;
+  
   return chain;
 };
